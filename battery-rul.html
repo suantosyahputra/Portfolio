@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Battery RUL Prediction</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      line-height: 1.6;
+    }
+    h1, h2 {
+      color: #2c3e50;
+    }
+    img {
+      max-width: 100%;
+      margin: 1rem 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+    th {
+      background-color: #f4f4f4;
+      text-align: left;
+    }
+    code {
+      background-color: #eee;
+      padding: 2px 4px;
+      border-radius: 3px;
+    }
+    a {
+      color: #2980b9;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Battery Remaining Useful Life (RUL) Prediction</h1>
+
+  <p><strong>Description:</strong> This project predicts the remaining useful life (RUL) of a battery using cycle-level metrics like discharge time, voltage, and charging duration.</p>
+
+  <p><strong>Key Goal:</strong> Build machine learning models to forecast degradation trends realistically — and compare <em>random splits</em> (interpolation) vs. <em>time-aware splits</em> (true forecasting).</p>
+
+  <h2>⚙️ Tools & Techniques</h2>
+  <ul>
+    <li>Python, scikit-learn, Pandas</li>
+    <li>Random Forest, Isotonic Regression, Ridge Regression</li>
+    <li>Time-aware vs Random Split analysis</li>
+    <li>Rolling features, ablation tests, residual modeling</li>
+  </ul>
+
+  <h2>📊 Evaluation Results</h2>
+  <table>
+    <tr>
+      <th>Method / Split</th>
+      <th>RMSE</th>
+      <th>Notes</th>
+    </tr>
+    <tr><td>Random split (all features)</td><td>27.87</td><td>Over-optimistic (leakage)</td></tr>
+    <tr><td>Time-aware split (all features)</td><td>159.86</td><td>Realistic baseline</td></tr>
+    <tr><td>Time-aware (without Discharge Time)</td><td>159.23</td><td>Raw signal not generalizing</td></tr>
+    <tr><td>Isotonic on Discharge Time only</td><td>219.48</td><td>Monotonic baseline</td></tr>
+    <tr><td>Stacked (Isotonic + Ridge)</td><td>234.85</td><td>No improvement over baseline</td></tr>
+  </table>
+
+  <h2>🔍 Data Split Comparison</h2>
+  <p>Random splits leak information between adjacent cycles. Time-aware splits simulate real forecasting.</p>
+  <img src="split_comparison.png" alt="Random vs Time-Aware Split" />
+
+  <h2>📈 Insight</h2>
+  <p><code>Discharge Time (s)</code> shows a strong monotonic relationship with RUL (Spearman ρ ≈ 0.96), but doesn't generalize well when forecasting future cycles — highlighting the importance of proper evaluation strategy.</p>
+
+  <h2>🧪 Future Work</h2>
+  <ul>
+    <li>Spline/log transforms for dominant features</li>
+    <li>Monotonic gradient boosting or GPs with uncertainty</li>
+    <li>Feature smoothing and advanced temporal features</li>
+  </ul>
+
+  <p><a href="index.html">&larr; Back to Portfolio</a></p>
+
+</body>
+</html>
